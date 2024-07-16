@@ -1,0 +1,77 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sd="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{/layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{grupos.listagrupos.title}"></title>
+</head>
+<body>
+<div layout:fragment="cabecera">
+    <h1  th:text="#{grupos.listagrupos.title}"></h1>
+</div>
+<div layout:fragment="contenido">
+    <div class="box-body">
+
+
+        <form action="#" th:action="@{/}" method="get">
+            <button type="submit" value="Nuevo" th:formaction="'/grupos/registro'" th:text="#{general.new}"  ></button>
+            <div class="table-responsive">
+            <!-- Opcion 1 : tabla con contenido ( recomandable en caso de listas-->
+                <table class="table table-bordered table-hover">
+                    <tr>
+                        <th th:text="#{grupos.listagrupos.email}"></th>
+                        <th th:text="#{grupos.listagrupos.descripcion}"></th>
+                        <th th:text="#{grupos.listagrupos.url}"></th>
+                        <th  sec:authorize="hasRole('ADMIN')" >Habilitar S/N</th>
+                        <th>&nbsp</th>
+                        <th>&nbsp</th>
+                    </tr>
+                    <tr th:each="elemento , posicion : ${listaGrupos}">
+                        <td th:text="${elemento.email}"></td>
+                        <td th:text="${elemento.descripcion}"></td>
+                        <td th:text="${elemento.url}"></td>
+                        <td  sec:authorize="hasRole('ADMIN')" >
+                            <button type="submit" value="Habilitar" th:formaction="'/grupos/'+ ${elemento.id} +'/habilitar'" th:text="#{general.habilitar}" ></button>
+                        </td>
+                        <td>
+                            <!-- meter un link para ver  con texto "ver"-->
+                            <a th:href="@{'/grupos/'+ ${elemento.id}}" th:text="#{general.detalles}"></a>
+                        </td>
+                        <td>
+                            <!-- meter un boton para borrar  con un boton-->
+                            <button type="submit" value="Eliminar" th:formaction="'/grupos/'+ ${elemento.id} +'/delete'" th:text="#{general.eliminar}" ></button>
+                        </td>
+                    </tr>
+                    <!--Mostramos una ultima fila con inormación cuando no hay registros -->
+                    <tr th:if="${listaGrupos ==null or  listaGrupos.empty}">
+                        <td colspan="13" class="text-center" th:text="#{general.nodata}"></td>
+                    </tr>
+                </table>
+            </div>
+        </form>
+    </div>
+    <!-- preparamos el div para poner los numeros de pagina-->
+    <div  th:if="${listaGrupos!=null and !listaGrupos.empty}" >
+        <div class="text-center">
+            <nav>
+                <ul class="pagination" sd:pagination="full">
+                    <!--  si hay menos del numero minimo de registos no muestro la barra-->
+                    <div  th:if="${listaGrupos.totalPages > 0}" class="pagination"
+                       th:each="pageNumber : ${pageNumbers}">
+                        <li th:class="${pageNumber==listaGrupos.number + 1} ? active">
+                            <a href="#"
+                               th:href="@{/grupos(size=${listaGrupos.size}, page=${pageNumber})}"
+                               th:text=${pageNumber}></a>
+                        </li>
+                    </div>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+

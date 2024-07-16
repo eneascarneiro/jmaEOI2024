@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html th:lang="#{principal.lang}" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <meta th:charset="#{principal.charset}">
+    <title th:text="#{principal.title}"></title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link th:href="@{/img/favicon.ico}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&family=Roboto:wght@500;700;900&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link th:href="@{/lib/animate/animate.min.css}" rel="stylesheet">
+    <link th:href="@{/lib/owlcarousel/assets/owl.carousel.min.css}" rel="stylesheet">
+    <link th:href="@{/lib/lightbox/css/lightbox.min.css}" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body>
+<script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="./tiff.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        var imageFiles = [
+            '2023-11-19-00_00_2023-11-19-23_59_Sentinel-2_L2A_B03_(Raw).tiff'
+        ];
+
+        var loadImage = function (filename) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', filename);
+            xhr.responseType = 'arraybuffer';
+            xhr.onload = function (e) {
+                var buffer = xhr.response;
+                var tiff = new Tiff({buffer: buffer});
+                var canvas = tiff.toCanvas();
+                var width = tiff.width();
+                var height = tiff.height();
+                if (canvas) {
+                    var $elem = $('<div><div><a href="' + filename + '">' +
+                        filename +
+                        ' (width: ' + width + ', height:' + height + ')' +
+                        '</a></div></div>');
+                    $elem.append(canvas);
+                    $('body').append($elem);
+                }
+            };
+            xhr.send();
+        };
+
+        for (var i = 0, len = imageFiles.length; i < len; ++i) {
+            loadImage('./imagenes/' + imageFiles[i]);
+        }
+    });
+
+</script>
+</body>
+
+</html>

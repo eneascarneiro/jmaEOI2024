@@ -1,0 +1,22 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sd="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{/layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{api.odata.title}"></title>
+</head>
+<body>
+    <div layout:fragment="cabecera">
+        <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4" th:text="#{api.odata.subtitle}"></p>
+        <h5 class="text-center h6 fw-bold mb-5 mx-1 mx-md-4 mt-4" th:text="#{api.odata.rules}"></H5>
+    </div>
+    <div layout:fragment="contenido">
+        <div class="container h-100">
+            <h3 th:text="#{api.odata.nodadafound}"></h3>
+        </div>
+    </div>
+
+
+</body>
+</html>

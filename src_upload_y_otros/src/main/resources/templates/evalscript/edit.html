@@ -1,0 +1,87 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sd="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{/layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{evalscript.details.title}"></title>
+</head>
+<body>
+    <div layout:fragment="cabecera">
+        <h1 th:text ="#{evalscript.details.title}"></h1>
+    </div>
+    <div layout:fragment="contenido">
+
+        <div class="container h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-lg-12 col-xl-11">
+                    <div class="card text-black" style="border-radius: 25px;">
+                        <div class="card-body p-md-5">
+                            <div class="row justify-content-center">
+
+
+                                <form class="mx-1 mx-md-4"  role="form"  th:object="${datos} " >
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="d-flex flex-row align-items-center mb-4">
+                                                <div class="form-outline flex-fill mb-0">
+                                                    <input type="text" id="id" maxlength="50" hidden="true" readonly="true" th:field="${datos.id}">
+                                                    <label for="title" th:text="#{evalscript.field.scriptTitle}"></label>
+                                                    <input type="text" id="title" maxlength="50" th:field="${datos.scriptTitle}">
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-row align-items-center mb-4">
+                                                <div class="form-outline flex-fill mb-0">
+                                                    <label for="descript" th:text="#{evalscript.field.scriptDescription}"></label>
+                                                    <textarea class="form-control" id="descript" rows="3"
+                                                              name="descript"
+                                                              maxlength="500"
+                                                              placeholder="Code" th:field="${datos.scriptDescription}"
+                                                              required="required"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-row align-items-center mb-4">
+                                                <div class="form-outline flex-fill mb-0">
+                                                    <label for="shared" th:text="#{evalscript.field.shared}"></label>
+                                                    <input type="checkbox"  id="shared"  th:field="${datos.shared}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="d-flex flex-row align-items-center mb-8">
+                                                <textarea class="form-control" id="description" rows="10"
+                                                          name="code"
+                                                          placeholder="Code" th:field="${datos.scriptText}"
+                                                          required="required"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                                                <button type="submit"  class="btn btn-primary btn-lg"
+                                                        th:text="#{btn.guardar}"
+                                                        th:formaction="'/evalscript/registro'"
+                                                        th:method="post"></button>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                                                <button type="submit"  class="btn btn-primary btn-lg"
+                                                        th:text="#{btn.lanzar}"
+                                                        th:formaction="'/evalscript/launch/'+ ${datos.id}"
+                                                        th:method="get"></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

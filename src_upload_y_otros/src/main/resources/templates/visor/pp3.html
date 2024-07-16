@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GeoTIFF Pixel Value</title>
+
+</head>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.7.5/proj4.js"></script>
+<script src="https://unpkg.com/geotiff@1.0.0-beta.5/dist/geotiff.bundle.min.js"></script>
+<script>
+
+    async function getPixelValue(tiffFileUrl, lat, lon) {
+        // Fetch the GeoTIFF file
+        const response = await fetch(tiffFileUrl);
+        const arrayBuffer = await response.arrayBuffer();
+
+        // Parse the GeoTIFF
+        const tiff = await GeoTIFF.fromArrayBuffer(arrayBuffer);
+        const image = await tiff.getImage();
+
+        // Properties
+        const width = image.getWidth();
+        const height = image.getHeight();
+        console.log('Properties width: ' + String(width) + ',height:' + String(height));
+        const [ originY, originX ] = image.getOrigin();
+        console.log('Properties originX: ' + String(originX) + ',originY:' + String(originY));
+        
+
+        const [ xSize, ySize ] = image.getResolution();
+        console.log('Properties xSize: ' + String(xSize) + ',ySize:' + String(ySize));
+        const uWidth = xSize * width;
+        const uHeight = ySize * height;
+        console.log('Properties uWidth: ' + String(uWidth) + ',uHeight:' + String(uHeight));
+
+        // x and y come from the projection.forward example earlier
+        const percentY = ( lat - originY ) / uWidth;
+        const percentX = ( lon - originX ) / uHeight;
+        console.log('Properties percentX: ' + String(percentX) + ',percentY:' + String(percentY));
+        const pixelX = Math.floor( width * percentX );
+        const pixelY = Math.floor( height * percentY );
+        console.log('Properties pixelX: ' + String(pixelX) + ',pixelY:' + String(pixelY));
+        // Convert lat/lon to pixel coordinates
+        const [ value ] = await image.readRasters( {
+            interleave: true,
+            window: [ pixelX, pixelY, pixelX + 1, pixelY + 1],
+            samples: [ 0 ]
+        } );
+        // Read the pixel value
+        console.log('Value');
+        console.log(value);
+
+
+
+
+        return value;
+    }
+
+    // Example usage
+    //const tiffUrl = 'http://localhost:8092/files/src_data_safe/userfiles/1951/jma_busgos_00015/386/tiff/s2l2a/AUTO/06/670bb5250ad1e92fb47b3bbb414e0315/response.tiff'
+    //const tiffUrl = 'http://localhost:8092/files/src_data_safe/userfiles/1951/jma_busgos_00015/386/tiff/s2l2a/UINT16/06/c26201b2b1561a3696c5d7264a29b6f5/response.tiff'
+    //const latitude = 42.301402752089;
+    //const longitude = -3.683528642004319;
+    const tiffUrl = 'http://localhost:8092/files/src_data_safe/appsharedfiles/0/lucas2018OCN/0/tiff/s2l2a/FLOAT32/30322152/06/873e7e4d229e71c88c4a127947892818/responsenew.tiff'
+    const latitude = 41.2778543;
+    const longitude = -5.442522515;
+
+    getPixelValue(tiffUrl, latitude, longitude)
+        .then(value => console.log(`Pixel value for, ${tiffUrl},  at (${latitude}, ${longitude}): ${value}`))
+        .catch(error => console.error(`Error: ${error}`));
+
+    const tiffUrl1 = 'http://localhost:8092/files/src_data_safe/appsharedfiles/0/lucas2018OCN/0/tiff/s2l2a/FLOAT32/30382148/06/f79ad28916b3dad3823cf30403f23e1b/responsenew.tiff'
+    const latitude1 = 41.25353389;
+    const longitude1= -5.363368626;
+
+    getPixelValue(tiffUrl1, latitude1, longitude1)
+        .then(value => console.log(`Pixel value for, ${tiffUrl1},  at (${latitude1}, ${longitude1}): ${value}`))
+        .catch(error => console.error(`Error: ${error}`));
+
+    const tiffUrl2 = 'http://localhost:8092/files/src_data_safe/appsharedfiles/0/lucas2018OCN/0/tiff/s2l2a/FLOAT32/30122252/06/e840216da70580f7b8a4798ed040013a/responsenew.tiff'
+    const latitude2 = 42.1222958;
+    const longitude2= -5.907669173;
+
+    getPixelValue(tiffUrl2, latitude2, longitude2)
+        .then(value => console.log(`Pixel value for, ${tiffUrl2},  at (${latitude2}, ${longitude2}): ${value}`))
+        .catch(error => console.error(`Error: ${error}`));
+</script>
+</body>
+</html>

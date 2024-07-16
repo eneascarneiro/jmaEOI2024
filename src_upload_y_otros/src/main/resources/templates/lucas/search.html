@@ -1,0 +1,63 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sd="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{/layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{lucas2018.search.title}"></title>
+</head>
+<body>
+<div layout:fragment="cabecera">
+    <h1 th:text ="#{lucas2018.search.title}"></h1>
+</div>
+<div layout:fragment="contenido">
+
+    <div class="container h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-lg-12 col-xl-11">
+                <div class="card text-black" style="border-radius: 25px;">
+                    <div class="card-body p-md-5">
+                        <div class="row justify-content-center">
+
+
+                            <form class="mx-1 mx-md-4"  role="form"  th:action="@{/api/lucas/lucas2018list}" th:object="${datos} " method="post">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="d-flex flex-row align-items-center mb-8">
+                                            <div class="form-outline w-100 mb-8">
+                                                 <textarea class="form-control" id="description" rows="5"
+                                                           name="Polygon"
+                                                           placeholder="Polygon" th:field="${datos.polygon}"
+                                                           required="required"
+                                                 ></textarea>
+                                            </div>
+                                            <!--div class="form-outline w-90 mb-8">
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="ds1" onclick="controlds1()" name="option1" value="lucas2018OCN" th:field="${datos.dataset}" checked>
+                                                    <label class="form-check-label" for="ds1">Dataset 1</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="ds2"  onclick="controlds2()"  name="option2" value="lucas2018OCND" th:field="${datos.dataset}">
+                                                    <label class="form-check-label" for="ds2">Dataset 2</label>
+                                                </div>
+                                            </div-->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                                        <button type="submit"
+                                                class="btn btn-primary btn-lg" th:text="#{btn.buscar}"
+                                               ></button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
