@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sd="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{/layout/layout_images3}">
+    <head>
+        <meta charset="UTF-8">
+        <title>Tiff viewer</title>
+    </head>
+    <body onmousedown="return false;">
+        <div layout:fragment="cabecera">
+            <h1>Tiff viewer</h1>
+        </div>
+        <div layout:fragment="contenido">
+            <div className="container h-100">
+                <div className="row d-flex justify-content-center align-items-center h-100">
+                    <input th:hidden="true" id="file" th:value= "${image}">
+                    <input th:hidden="true" id="minlong" th:value= "${minlong}">
+                    <input th:hidden="true" id="minlat" th:value= "${minlat}">
+                    <input th:hidden="true" id="maxlong" th:value= "${maxlong}">
+                    <input th:hidden="true" id="maxlat" th:value= "${maxlat}">
+                    <input th:hidden="true" id="polygon" th:value= "${polygon}">
+                    <div className="col-lg-12 col-xl-11">
+                        <div className="card text-black" style="border-radius: 25px;">
+                            <div className="card-body p-md-5">
+                                <div className="row justify-content-center">
+                                    <div class="card-body p-md-5">
+                                        <div class="row justify-content-center">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div className="d-flex flex-row align-items-center mb-4">
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <button  id = "clearcanvas" onclick="clearcanvas()">Clear</button>
+                                                                <button  id = "addpolygon"  onclick="add_polygon()" >Show polygon </button>
+                                                                    <!--button onClick="add_polygon_aux()">Show polygon aux</button-->
+                                                                <div>
+                                                                    <label for="minlongval">Min  longitude</label>
+                                                                    <br>
+                                                                    <textarea disabled="true"  id ="minlongval" th:text="${minlong}" rows="1"></textarea>
+                                                                </div>
+                                                                <div>
+                                                                    <label for="maxlongval">Max  longigude</label>
+                                                                    <br>
+                                                                    <textarea disabled="true"  id="maxlongval" th:text="${maxlong}" rows="1"></textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col">
+                                                                <label for="favcolor">Select color:</label>
+                                                                <input type="color" id="favcolor" name="favcolor" value="#ff0000" width="2" >
+                                                                <div>
+                                                                    <label for="minlatval">Min  latitude</label>
+                                                                    <br>
+                                                                    <textarea disabled="true" id = "minlatval" th:text="${minlat}" rows="1"></textarea>
+                                                                </div>
+                                                                <div>
+                                                                    <label for="maxlatval">Max latitude</label>
+                                                                    <br>
+                                                                    <textarea disabled="true" id= "maxlatval" th:text="${maxlat}" rows="1"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="d-flex flex-row align-items-center mb-8">
+                                                        <label for="coordinates">Polygon coordinates</label>
+                                                        <div class="form-outline w-100 mb-8">
+                                                            <textarea class="form-control" id="coordinates" rows="5"
+                                                                name="coordinates"
+                                                                placeholder="coordinates" th:text="${polygon}"
+                                                                      required="required"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                               </div>
+                            </div>
+                       </div>
+                   </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

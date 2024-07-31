@@ -1,0 +1,20 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sd="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{/layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Csv file not found</title>
+</head>
+<body>
+    <div layout:fragment="cabecera">
+        <h1>Csv file not found</h1>
+    </div>
+    <div layout:fragment="contenido">
+        <div class="box-body">
+            <h2 th:text="${resultado}"></h2>
+        </div>
+    </div>
+</body>
+</html>

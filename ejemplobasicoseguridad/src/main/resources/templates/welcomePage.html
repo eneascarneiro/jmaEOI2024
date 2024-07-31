@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Insert title here</title>
+</head>
+<body>
+<h3> welcome page </h3>
+This page is accessible to ALL.
+<h3>Este es tu Nombre</h3>
+<p sec:authentication="name"></p>
+<h3>Este es tu role</h3>
+<p sec:authentication="authorities"></p>
+<div sec:authorize="hasRole('ADMIN')">Text visible to admin.</div>
+<div sec:authorize="hasRole('MANAGER')">Text visible to Manager.</div>
+<div sec:authorize="hasRole('HR')">Text visible to Hr.</div>
+</body>
+</html>

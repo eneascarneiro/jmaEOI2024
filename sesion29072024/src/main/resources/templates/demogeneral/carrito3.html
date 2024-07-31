@@ -1,0 +1,33 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sd="http://www.w3.org/1999/xhtml" xmlns:h1th="http://www.w3.org/1999/html"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{/demogeneral/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio</title>
+</head>
+<body>
+<div layout:fragment="cabecera">
+</div>
+<div layout:fragment="contenido" >
+
+    <h1> Este es un ejemplo de menus</h1>
+    <h2>Welcome</h2>
+    <p>Spring Security Thymeleaf tutorial</p>
+    <div sec:authorize="hasRole('USER')">Text visible to user.</div>
+    <div sec:authorize="hasRole('ADMIN')">Text visible to admin.</div>
+    <div sec:authorize="isAuthenticated()">
+        Text visible only to authenticated users.
+    </div>
+    Authenticated username:
+    <div sec:authentication="name"></div>
+    Authenticated user roles:
+    <div sec:authentication="principal.authorities"></div>
+
+</div>
+
+
+
+</body>
+</html>

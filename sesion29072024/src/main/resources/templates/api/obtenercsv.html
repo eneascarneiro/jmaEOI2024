@@ -1,0 +1,63 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sd="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{/layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{api.csv.title}"></title>
+</head>
+<body>
+    <div layout:fragment="cabecera">
+        <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4" th:text="#{api.csv.subtitle}"></p>
+    </div>
+    <div layout:fragment="contenido">
+
+        <div class="container h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-lg-12 col-xl-11">
+                    <div class="card text-black" style="border-radius: 25px;">
+                        <div class="card-body p-md-5">
+                            <div class="row justify-content-center">
+                                <div th:class="#{estilo.pantalladatosderecha}">
+                                    <form class="mx-1 mx-md-4"  role="form" th:action="@{/api/csvdata}" th:object="${file} " method="post">
+                                        <div class="d-flex flex-row align-items-center mb-4">
+                                            <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                                            <div class="form-outline flex-fill mb-0">
+                                                <input type="text" id="nombrearchivo" class="form-control"  maxlength="30" th:field="${file.nombrearchivo}"/>
+                                                <label class="form-label" for="nombrearchivo" th:text="#{api.file.nombre}"></label>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-row align-items-center mb-4">
+                                            <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                                            <div class="form-outline flex-fill mb-0">
+                                                <input type="text" id="ruta" class="form-control"  maxlength="30" th:field="${file.ruta}"/>
+                                                <label class="form-label" for="ruta" th:text="#{api.file.path}"></label>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-row align-items-center mb-4">
+                                            <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                                            <div class="form-outline flex-fill mb-0">
+                                                <input type="text" id="datos" class="form-control"  maxlength="30" th:field="${file.resultado}"/>
+                                                <label class="form-label" for="datos" th:text="#{api.file.datos}"></label>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                                            <button type="submit"  class="btn btn-primary btn-lg" th:text="#{btn.guardar}"></button>
+                                        </div>
+
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sd="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{/layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{sentinelqueryfilestiff.title}"></title>
+</head>
+<body>
+    <div layout:fragment="cabecera">
+        <h1 th:text="#{sentinelqueryfilestiff.list.title}"></h1>
+    </div>
+    <div layout:fragment="contenido">
+        <div class="box-body">
+            Show <span sd:page-size-selector="javascript"></span> entries
+
+            <form action="#" th:action="@{/}" method="post">
+                <div class="table-responsive">
+                    <!-- Opcion 1 : tabla con contenido ( recomandable en caso de listas-->
+                    <table class="table table-bordered table-hover">
+                        <thead >
+                        <tr>
+                            <th th:text="#{sentinelqueryfilestiff.band}"></th>
+                            <th th:text="#{sentinelqueryfilestiff.path}"></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="elemento , posicion : ${lista}">
+                            <td th:text="${elemento.band}"></td>
+                            <td th:text="${elemento.path}"></td>
+
+                            <td>
+                                <button type="submit" value="Show"
+                                        th:text="#{general.Show}"
+                                        th:formaction="'/sentinelqueryfilestiff/show/'+ ${elemento.id} + '/' +  ${query_id} " ></button>
+
+                            </td>
+
+                        </tr>
+                        </tbody>
+                        <!--Mostramos una ultima fila con inormación cuando no hay registros -->
+                        <tr th:if="${lista ==null or  lista.empty}">
+                            <td colspan="13" class="text-center" th:text="#{general.noencontrado}"></td>
+                        </tr>
+                    </table>
+                </div>
+            </form>
+        </div>
+        <!-- preparamos el div para poner los numeros de pagina-->
+        <div  th:if="${lista!=null and !lista.empty}" >
+            <div class="text-center">
+                <nav>
+                    <ul class="pagination" sd:pagination="full">
+                        <!--  si hay menos del numero minimo de registos no muestro la barra-->
+                        <div  th:if="${lista.totalPages > 0}" class="pagination"
+                              th:each="pageNumber : ${pageNumbers}">
+                            <li th:class="${pageNumber==lista.number + 1} ? active">
+                                <a href="#" th:href="@{/sentinelqueryfilestiff/filter/{filterid}(size=${lista.size}, page=${pageNumber},filterid=${query_id})}"
+                                   th:text=${pageNumber}></a>
+                            </li>
+                        </div>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>
+

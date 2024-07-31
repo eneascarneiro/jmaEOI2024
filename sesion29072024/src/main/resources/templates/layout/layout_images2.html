@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html th:lang="#{principal.lang}" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <meta th:charset="#{principal.charset}">
+    <title th:text="#{principal.title}"></title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link th:href="@{/img/favicon.ico}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&family=Roboto:wght@500;700;900&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link th:href="@{/lib/animate/animate.min.css}" rel="stylesheet">
+    <link th:href="@{/lib/owlcarousel/assets/owl.carousel.min.css}" rel="stylesheet">
+    <link th:href="@{/lib/lightbox/css/lightbox.min.css}" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body>
+<!-- Spinner Start -->
+<div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+<!-- Spinner End -->
+
+
+<!-- Topbar Start -->
+<div class="container-fluid bg-dark px-5">
+    <div class="row gx-4 d-none d-lg-flex">
+        <div class="col-lg-6 text-start">
+            <div class="h-100 d-inline-flex align-items-center py-3 me-4">
+                <div class="btn-sm-square rounded-circle bg-primary me-2">
+                    <small class="fa fa-map-marker-alt text-white"></small>
+                </div>
+                <small th:text="#{FooterStart.direccion}"></small>
+            </div>
+            <div class="h-100 d-inline-flex align-items-center py-3">
+                <div class="btn-sm-square rounded-circle bg-primary me-2">
+                    <small class="fa fa-envelope-open text-white"></small>
+                </div>
+                <small th:text="#{FooterStart.email}"></small>
+            </div>
+            <div class="h-100 d-inline-flex align-items-center py-3">
+                <div class="btn-sm-square rounded-circle bg-primary me-2">
+                    <small class="fa fa fa-language text-white"></small>
+                </div>
+                <span th:text="#{lang.change}"></span>:
+                <select id="locales">
+                    <option value=""></option>
+                    <option value="es" th:text="#{lang.es}"></option>
+                    <option value="en" th:text="#{lang.eng}"></option>
+                    <option value="fr" th:text="#{lang.fr}"></option>
+                </select>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<!-- Topbar End -->
+
+
+<!-- Navbar Start -->
+<nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0 px-4 px-lg-5">
+    <a href="../index.html" class="navbar-brand d-flex align-items-center">
+        <h2 class="m-0 text-primary" th:text="#{principal.nombreapp}"></h2>
+    </a>
+    <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav ms-auto py-4 py-lg-0"  >
+            <li class="nav-item"
+                th:if="${menuItem.parent.id == 999999 } and  ${menuItem.order < 9999}
+                and  ${#lists.size(menuList.?[parent.id ==  __${menuItem.id}__ ]) == 0 } "
+                th:each="menuItem : ${menuList}" >
+                <th:block th:switch="#{principal.lang}">
+                    <a th:case="'en'"
+                       th:href="${menuItem.url}"
+                       th:text="${menuItem.description_en}"
+                       class="nav-link ">
+                    </a>
+                    <a th:case="'es'"
+                       th:href="${menuItem.url}"
+                       th:text="${menuItem.description_es}"
+                       class="nav-link ">
+                    </a>
+                    <a th:case="'fr'"
+                       th:href="${menuItem.url}"
+                       th:text="${menuItem.description_fr}"
+                       class="nav-link ">
+                    </a>
+                </th:block>
+            </li>
+            <li th:if="${menuItem.parent.id == 999999 } and  ${#lists.size(menuList.?[parent.id ==  __${menuItem.id}__ ]) > 0 } "
+                class="nav-item dropdown"
+                th:each="menuItem : ${menuList}" >
+                <a th:href="${menuItem.url}" th:text="${menuItem.description}"
+                   class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                </a>
+                <div class="dropdown-menu">
+                    <a
+                            th:each="menuItemHijo : ${menuList.?[parent.id ==  __${menuItem.id}__ ]}"
+                            th:href="${menuItemHijo.url}"
+                            th:text="${menuItemHijo.description_en}"
+                            class="dropdown-item">
+                    </a>
+                    <!--th:block th:switch="#{principal.lang}">
+                        <a th:case="'en'"
+                           th:each="menuItemHijo : ${menuList.?[parent.id ==  __${menuItem.id}__ ]}"
+                           th:href="${menuItemHijo.url}"
+                           th:text="${menuItemHijo.description_en}"
+                           class="dropdown-item">
+                        </a>
+                        <a th:case="'es'"
+                           th:each="menuItemHijo : ${menuList.?[parent.id ==  __${menuItem.id}__ ]}"
+                           th:href="${menuItemHijo.url}"
+                           th:text="${menuItemHijo.description_es}"
+                           class="dropdown-item">
+                        </a>
+                        <a th:case="'fr'"
+                           th:each="menuItemHijo : ${menuList.?[parent.id ==  __${menuItem.id}__ ]}"
+                           th:href="${menuItemHijo.url}"
+                           th:text="${menuItemHijo.description_fr}"
+                           class="dropdown-item">
+                        </a>
+                    </th:block-->
+                </div>
+
+            </li>
+            <li class="nav-item"
+                th:if="${menuItem.parent.id == 999999 } and  ${menuItem.order == 9999}
+                    and  ${#lists.size(menuList.?[parent.id ==  __${menuItem.id}__ ]) == 0} "
+                th:each="menuItem : ${menuList}" >
+                <th:block th:switch="#{principal.lang}">
+                    <a th:case="'en'"
+                       th:href="${menuItem.url}"
+                       th:text="${menuItem.description_en}"
+                       class="nav-link ">
+                    </a>
+                    <a th:case="'es'"
+                       th:href="${menuItem.url}"
+                       th:text="${menuItem.description_es}"
+                       class="nav-link ">
+                    </a>
+                    <a th:case="'fr'"
+                       th:href="${menuItem.url}"
+                       th:text="${menuItem.description_fr}"
+                       class="nav-link ">
+                    </a>
+                </th:block>
+            </li>
+        </div>
+    </div>
+</nav>
+<!-- Navbar End -->
+
+
+<!-- Inicio ventanas que rellena java-->
+<div class="container-xxl py-5">
+    <!-- Aqui vamos a escribir las cabeceras de los bloques  -->
+    <section class="container" layout:fragment="cabecera"> </section>
+    <!-- Aqui vamos a escribir el contenido de los bloques  -->
+    <section class="container" layout:fragment="contenido"> </section>
+    <section class="container" >
+        <canvas id="jPolygon" onmousedown="point_it(event)" oncontextmenu="return false;">
+            Your browser does not support the HTML5 canvas tag.
+        </canvas>
+    </section>
+</div>
+
+<!-- Footer Start -->
+<div class="container-fluid bg-dark text-secondary footer mt-5 py-5 wow fadeIn" data-wow-delay="0.1s">
+    <div class="container py-5">
+        <div class="row g-5">
+            <div class="col-lg-3 col-md-6">
+                <h5 class="text-light mb-4" th:text="#{layout.Address}"></h5>
+                <p class="mb-2" th:text="#{FooterStart.direccion}"><i class="fa fa-map-marker-alt me-3"></i></p>
+                <p class="mb-2" th:text="#{FooterStart.telefono}"><i class="fa fa-phone-alt me-3"></i></p>
+                <p class="mb-2" th:text="#{FooterStart.email}"><i class="fa fa-envelope me-3"></i></p>
+                <!--div class="d-flex pt-2">
+                    <a class="btn btn-square btn-outline-secondary rounded-circle me-2" href=""><i class="fab fa-twitter"></i></a>
+                    <a class="btn btn-square btn-outline-secondary rounded-circle me-2" href=""><i class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-square btn-outline-secondary rounded-circle me-2" href=""><i class="fab fa-youtube"></i></a>
+                    <a class="btn btn-square btn-outline-secondary rounded-circle me-2" href=""><i class="fab fa-linkedin-in"></i></a>
+                </div-->
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h5 class="text-light mb-4" th:text="#{layout.qlinks}" ></h5>
+                <h6 class="text-light mb-4" th:text="#{layout.contact}" ></h6>
+                <div class="dropdown-content">
+                    <a rel="noopener" target="_blank" href="https://investigacion.ubu.es/investigadores/157494/detalle">José Manuel Aroca Fernández</a>
+                    <br>
+                    <a rel="noopener" target="_blank" href="https://investigacion.ubu.es/investigadores/37075/detalle">Pedro Latorre Carmona</a>
+                    <br>
+                    <a rel="noopener" target="_blank" href="https://investigacion.ubu.es/investigadores/35117/detalle">José Francisco Díez Pastor</a>
+
+                </div>
+                <a class="btn btn-link" th:href="'/privacy'" th:text="#{layout.privacy}" ></a>
+                <a class="btn btn-link" th:href="'/termsandconditions'" th:text="#{layout.termcond}" ></a>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h5 class="text-light mb-4" th:text="#{layout.Newsletter}"></h5>
+                <p>Advanced Data MIning Research And (Business intelligence | Bioinformatics | Big Data) LEarning</p>
+                <a class="btn btn-link" href="https://www.linkedin.com/company/admirable-research-group/" th:text="#{layout.admirable}" ></a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer End -->
+
+
+<!-- Copyright Start -->
+<div class="container-fluid py-4" style="background: #000000;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                &copy; <a class="border-bottom" href="#">WALGREEN</a>, All Right Reserved.
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Copyright End -->
+
+
+<!-- Back to Top -->
+<a href="#" class="btn btn-lg btn-primary btn-lg-square rounded-circle back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
+</script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#locales").change(function () {
+            var selectedOption = $('#locales').val();
+            var ref = window.location.pathname;
+            if (selectedOption != ''){
+                window.location.replace(ref + '?lang=' + selectedOption);
+            }
+        });
+    });
+</script>
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/lib/wow/wow.min.js}"></script>
+<script th:src="@{/lib/easing/easing.min.js}"></script>
+<script th:src="@{/lib/waypoints/waypoints.min.js}"></script>
+<script th:src="@{/lib/counterup/counterup.min.js}"></script>
+<script th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
+<script th:src="@{/lib/isotope/isotope.pkgd.min.js}"></script>
+<script th:src="@{/lib/lightbox/js/lightbox.min.js}"></script>
+
+<!-- Template Javascript -->
+<script th:src="@{/js/main.js}"></script>
+<script th:src="@{/js/util.js}"></script>
+<script th:src="@{/js/tiff.min.js}"></script>
+<script type="text/javascript">
+    /*
+   jPolygon - a ligthweigth javascript library to draw polygons over HTML5 canvas images.
+   Project URL: http://www.matteomattei.com/projects/jpolygon
+   Author: Matteo Mattei <matteo.mattei@gmail.com>
+   Version: 1.0
+   License: MIT License
+*/
+
+    var perimeter = new Array();
+    var complete = false;
+    var canvas = document.getElementById("jPolygon");
+    var ctx;
+
+    function line_intersects(p0, p1, p2, p3) {
+        var s1_x, s1_y, s2_x, s2_y;
+        s1_x = p1['x'] - p0['x'];
+        s1_y = p1['y'] - p0['y'];
+        s2_x = p3['x'] - p2['x'];
+        s2_y = p3['y'] - p2['y'];
+
+        var s, t;
+        s = (-s1_y * (p0['x'] - p2['x']) + s1_x * (p0['y'] - p2['y'])) / (-s2_x * s1_y + s1_x * s2_y);
+        t = ( s2_x * (p0['y'] - p2['y']) - s2_y * (p0['x'] - p2['x'])) / (-s2_x * s1_y + s1_x * s2_y);
+
+        if (s >= 0 && s <= 1 && t >= 0 && t <= 1)
+        {
+            // Collision detected
+            return true;
+        }
+        return false; // No collision
+    }
+
+    function point(x, y){
+        ctx.fillStyle="white";
+        ctx.strokeStyle = "white";
+        ctx.fillRect(x-2,y-2,4,4);
+        ctx.moveTo(x,y);
+    }
+
+    function undo(){
+        ctx = undefined;
+        perimeter.pop();
+        complete = false;
+        start(true);
+    }
+
+    function clear_canvas(){
+        ctx = undefined;
+        perimeter = new Array();
+        complete = false;
+        document.getElementById('coordinates').value = '';
+        start();
+    }
+
+    function draw(end){
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "white";
+        ctx.lineCap = "square";
+        ctx.beginPath();
+
+        for(var i=0; i<perimeter.length; i++){
+            if(i==0){
+                ctx.moveTo(perimeter[i]['x'],perimeter[i]['y']);
+                end || point(perimeter[i]['x'],perimeter[i]['y']);
+            } else {
+                ctx.lineTo(perimeter[i]['x'],perimeter[i]['y']);
+                end || point(perimeter[i]['x'],perimeter[i]['y']);
+            }
+        }
+        if(end){
+            ctx.lineTo(perimeter[0]['x'],perimeter[0]['y']);
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
+            ctx.fill();
+            ctx.strokeStyle = 'blue';
+            complete = true;
+        }
+        ctx.stroke();
+
+        // print coordinates
+        if(perimeter.length == 0){
+            document.getElementById('coordinates').value = '';
+        } else {
+            document.getElementById('coordinates').value = JSON.stringify(perimeter);
+        }
+    }
+
+    function check_intersect(x,y){
+        if(perimeter.length < 4){
+            return false;
+        }
+        var p0 = new Array();
+        var p1 = new Array();
+        var p2 = new Array();
+        var p3 = new Array();
+
+        p2['x'] = perimeter[perimeter.length-1]['x'];
+        p2['y'] = perimeter[perimeter.length-1]['y'];
+        p3['x'] = x;
+        p3['y'] = y;
+
+        for(var i=0; i<perimeter.length-1; i++){
+            p0['x'] = perimeter[i]['x'];
+            p0['y'] = perimeter[i]['y'];
+            p1['x'] = perimeter[i+1]['x'];
+            p1['y'] = perimeter[i+1]['y'];
+            if(p1['x'] == p2['x'] && p1['y'] == p2['y']){ continue; }
+            if(p0['x'] == p3['x'] && p0['y'] == p3['y']){ continue; }
+            if(line_intersects(p0,p1,p2,p3)==true){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function point_it(event) {
+        if(complete){
+            alert('Polygon already created');
+            return false;
+        }
+        var rect, x, y;
+
+        if(event.ctrlKey || event.which === 3 || event.button === 2){
+            if(perimeter.length==2){
+                alert('You need at least three points for a polygon');
+                return false;
+            }
+            x = perimeter[0]['x'];
+            y = perimeter[0]['y'];
+            if(check_intersect(x,y)){
+                alert('The line you are drowing intersect another line');
+                return false;
+            }
+            draw(true);
+            alert('Polygon closed');
+            event.preventDefault();
+            return false;
+        } else {
+            rect = canvas.getBoundingClientRect();
+            x = event.clientX - rect.left;
+            y = event.clientY - rect.top;
+            if (perimeter.length>0 && x == perimeter[perimeter.length-1]['x'] && y == perimeter[perimeter.length-1]['y']){
+                // same point - double click
+                return false;
+            }
+            if(check_intersect(x,y)){
+                alert('The line you are drowing intersect another line');
+                return false;
+            }
+            perimeter.push({'x':x,'y':y});
+            draw(false);
+            return false;
+        }
+    }
+
+    function start(with_draw) {
+        var img = new Image();
+        var pathimage = $("#file").val();
+        var filename = '/' +  pathimage
+        console.log("el path fisico es:"  + filename )
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET',filename);
+        xhr.responseType = 'arraybuffer';
+        console.log("antes  de onload:"   )
+        xhr.onload = function (e) {
+            console.log("dentro de onload:"  )
+            var buffer = xhr.response;
+            var tiff = new Tiff({buffer: buffer});
+            var canvasfile = tiff.toCanvas();
+            var dataURL = canvasfile.toDataURL();
+
+            img.setAttribute("src", dataURL);
+            console.log("el path dataURL es:"  + dataURL )
+
+            ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, canvasfile.width, canvasfile.height);
+            if(with_draw == true){
+                draw(false);
+            }
+        }
+    }
+
+
+
+</script>
+
+</body>
+</html>

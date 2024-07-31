@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoTIFF Pixel Value</title>
+
+</head>
+<body>
+<script src="https://unpkg.com/geotiff@1.0.0-beta.5/dist/geotiff.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.6.2/proj4.js"></script>
+<script>
+    async function getPixelValue(tiffFileUrl, latitude, longitude) {
+        // Fetch and read the TIFF file
+        const response = await fetch(tiffFileUrl);
+        const arrayBuffer = await response.arrayBuffer();
+        const tiff = await GeoTIFF.fromArrayBuffer(arrayBuffer);
+        const image = await tiff.getImage();
+
+        // Get the GeoTransform and projection
+        const geoKeys = image.getGeoKeys();
+        const tiepoint = image.getTiePoints()[0];
+        const pixelScale = image.getFileDirectory().ModelPixelScale;
+        const [scaleX, scaleY] = pixelScale;
+        const [tieX, tieY] = [tiepoint.x, tiepoint.y];
+
+        // Setup projection transformation
+        let proj4Source = geoKeys.ProjectedCSTypeGeoKey;
+        if (proj4Source === undefined || proj4Source === null){
+            proj4Source= 'EPSG:4326';
+        }
+        const proj4Dest = 'EPSG:4326';
+        //proj4.defs(proj4Source, proj4Dest);
+
+        // Transform the latitude and longitude to the dataset's coordinate system
+        const [x_geo, y_geo] = proj4(proj4Dest, proj4Source, [longitude, latitude]);
+
+        // Compute pixel coordinates
+        const x_pixel = Math.round((x_geo - tieX) / scaleX);
+        const y_pixel = Math.round((tieY - y_geo) / scaleY);
+
+        // Ensure the coordinates are within the image bounds
+        const width = image.getWidth();
+        const height = image.getHeight();
+        if (x_pixel < 0 || x_pixel >= width || y_pixel < 0 || y_pixel >= height) {
+            throw new Error("Coordinates are outside the bounds of the image");
+        }
+
+        // Read the pixel value
+        const rasterData = await image.readRasters({ window: [x_pixel, y_pixel, x_pixel + 1, y_pixel + 1] });
+        const pixelValue = rasterData[0][0];
+
+        return pixelValue;
+    }
+
+    // Example usage
+    const tiffUrl = 'http://localhost:8092/files/src_data_safe/userfiles/1951/jma_busgos_00015/386/tiff/s2l2a/AUTO/06/670bb5250ad1e92fb47b3bbb414e0315/response.tiff'
+    const latitude = 42.301402752089;
+    const longitude = -3.683528642004319;
+
+    getPixelValue(tiffUrl, latitude, longitude)
+        .then(value => {
+            console.log(`Pixel value at (${latitude}, ${longitude}): ${value}`);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+</script>
+</body>
+</html>

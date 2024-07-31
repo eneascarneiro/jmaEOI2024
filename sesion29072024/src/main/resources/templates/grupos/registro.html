@@ -1,0 +1,78 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sd="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{/layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{grupos.registro.title}"></title>
+</head>
+<body>
+    <div layout:fragment="cabecera">
+        <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4" th:text="#{grupos.registro.title}"></p>
+    </div>
+    <div layout:fragment="contenido">
+        <div class="container h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-lg-12 col-xl-11">
+                    <div class="card text-black" style="border-radius: 25px;">
+                        <div class="card-body p-md-5">
+                            <div class="row justify-content-center">
+                                <form class="mx-1 mx-md-4"  role="form" th:action="@{/grupos/registro}" th:object="${datos} " method="post">
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="d-flex flex-row align-items-center mb-4">
+                                                <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
+                                                <div class="form-outline flex-fill mb-0">
+                                                    <input type="email" id="form3Example3c" class="form-control"  maxlength="50" th:field="${datos.email}"/>
+                                                    <label class="form-label" for="form3Example3c" th:text="#{grupos.listagrupos.email}"></label>
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex flex-row align-items-center mb-4">
+                                                <i class="fas fa-external-link fa-lg me-3 fa-fw"></i>
+                                                <div class="form-outline flex-fill mb-0">
+                                                    <input type="text" id="form3Example4c" class="form-control" maxlength="250" th:field="${datos.url}" />
+                                                    <label class="form-label" for="form3Example4c" th:text="#{grupos.listagrupos.url}"></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="d-flex flex-row align-items-center mb-4">
+                                                <i class="fas text_fields fa-lg me-3 fa-fw"></i>
+                                                <div class="form-outline flex-fill mb-0">
+                                                    <input type="text" id="form3Example1c" class="form-control"  maxlength="250" th:field="${datos.description_es}"/>
+                                                    <label class="form-label" for="form3Example1c" th:text="#{grupos.listagrupos.description_es}"></label>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-row align-items-center mb-4">
+                                                <i class="fas text_fields fa-lg me-3 fa-fw"></i>
+                                                <div class="form-outline flex-fill mb-0">
+                                                    <input type="text" id="form3Example1c" class="form-control"  maxlength="250" th:field="${datos.description_en}"/>
+                                                    <label class="form-label" for="form3Example1c" th:text="#{grupos.listagrupos.description_en}"></label>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-row align-items-center mb-4">
+                                                <i class="fas text_fields fa-lg me-3 fa-fw"></i>
+                                                <div class="form-outline flex-fill mb-0">
+                                                    <input type="text" id="form3Example1c" class="form-control"  maxlength="250" th:field="${datos.description_fr}"/>
+                                                    <label class="form-label" for="form3Example1c" th:text="#{grupos.listagrupos.description_fr}"></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                                        <button type="submit"  class="btn btn-primary btn-lg" th:text="#{grupos.register}"></button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>

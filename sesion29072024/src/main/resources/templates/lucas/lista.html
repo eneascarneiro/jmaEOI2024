@@ -1,0 +1,72 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sd="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{/layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{lucas2018.lista.title}"></title>
+    <style>
+        .addScroll{
+            overflow-y:auto;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="cabecera">
+    <h1  th:text="#{lucas2018.lista.title}"></h1>
+</div>
+<div layout:fragment="contenido">
+    <div class="box-body">
+        <form action="#" th:action="@{/api/lucas/lucas2018Export}" method="get">
+            <div class="row">
+                <div class="col">
+                    <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                        <button type="submit"  class="btn btn-primary btn-lg"
+                                th:text="#{btn.downloadcsv}"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="addScroll">
+                <div class="table-responsive" >
+                <!-- Opcion 1 : tabla con contenido ( recomandable en caso de listas-->
+                    <table class="table table-bordered table-hover">
+                        <tr>
+                            <th th:text="#{lucas2018.lista.longitud}"></th>
+                            <th th:text="#{lucas2018.lista.latitud}"></th>
+                            <th th:text="#{lucas2018.lista.id}"></th>
+                            <th th:text="#{lucas2018.lista.reflectance}"></th>
+                            <th th:text="#{lucas2018.lista.band}"></th>
+                            <th th:text="#{lucas2018.lista.survey_date}"></th>
+                            <th th:text="#{lucas2018.lista.oc}"></th>
+                            <th style="display:none"></th>
+                            <th></th>
+                        </tr>
+                        <tr th:each="elemento , posicion : ${lista}">
+                            <td th:text="${elemento.longitud}"></td>
+                            <td th:text="${elemento.latitud}"></td>
+                            <td th:text="${elemento.pointid}"></td>
+                            <td th:text="${elemento.reflectance}"></td>
+                            <td th:text="${elemento.band}"></td>
+                            <td th:text="${elemento.survey_date}"></td>
+                            <td th:text="${elemento.oc}"></td>
+                            <td style="display:none" th:text="${elemento.id}"></td>
+                            <td>
+                                <button type="submit" value="Show"
+                                        th:text="#{general.Show}"
+                                        th:formaction="'/lucasfiles/show/'+ ${elemento.id} "></button>
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- preparamos el div para poner los numeros de pagina-->
+</div>
+
+</body>
+</html>
+

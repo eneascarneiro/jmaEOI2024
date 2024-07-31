@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoTIFF Pixel Value</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/geotiff/0.4.0/geotiff.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.6.2/proj4.js"></script>
+</head>
+<body>
+<script src="https://unpkg.com/geotiff@1.0.0-beta.5/dist/geotiff.bundle.min.js"></script>
+<script>
+    async function getPixelValue(tiffUrl, lat, lon) {
+        // Fetch and parse the GeoTIFF file
+        const response = await fetch(tiffUrl);
+        const arrayBuffer = await response.arrayBuffer();
+        const tiff = await GeoTIFF.fromArrayBuffer(arrayBuffer);
+        const image = await tiff.getImage();
+
+        // Get the GeoTransform and Projection
+        const geoTransform = image.getGeoKeys().ModelTransformation;
+        const projection = image.getGeoKeys().ProjectedCSTypeGeoKey;
+
+        // Setup the coordinate transformation
+        proj4.defs("EPSG:4326", "+proj=longlat +datum=WGS84 +no_defs");
+        proj4.defs("EPSG:" + projection, image.getProjection());
+        const transform = proj4("EPSG:4326", "EPSG:" + projection);
+
+        // Transform latitude and longitude to the dataset's coordinate system
+        const [xGeo, yGeo] = transform.forward([lon, lat]);
+
+        // Calculate pixel coordinates
+        const xPixel = Math.round((xGeo - geoTransform[3]) / geoTransform[0]);
+        const yPixel = Math.round((yGeo - geoTransform[7]) / geoTransform[4]);
+
+        // Ensure the coordinates are within the image bounds
+        const width = image.getWidth();
+        const height = image.getHeight();
+        if (xPixel < 0 || xPixel >= width || yPixel < 0 || yPixel >= height) {
+            throw new Error("Coordinates are outside the bounds of the image");
+        }
+
+        // Read the pixel value
+        const rasterData = await image.readRasters({
+            window: [xPixel, yPixel, xPixel + 1, yPixel + 1]
+        });
+
+        return rasterData[0][0];
+    }
+
+    // Example usage
+    const tiffUrl = 'http://localhost:8092/files/src_data_safe/userfiles/1951/jma_busgos_00015/377/tiff/s2l1c/AUTO/02/fa5bcaebefa18db7993fefdf0a5302a4/response.tiff'
+    const latitude = 42.301402752089;
+    const longitude = -3.683528642004319;
+
+    getPixelValue(tiffUrl, latitude, longitude)
+        .then(value => {
+            console.log(`Pixel value at (${latitude}, ${longitude}): ${value}`);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+</script>
+</body>
+</html>

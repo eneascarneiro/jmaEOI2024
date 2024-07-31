@@ -1,0 +1,155 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sd="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{/layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro de usuarios</title>
+</head>
+<body>
+    <div layout:fragment="cabecera">
+        <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4" th:text="#{registro.subtitle}"></p>
+    </div>
+    <div layout:fragment="contenido">
+            <div class="container h-100">
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                    <div class="col-lg-12 col-xl-11">
+                        <div class="card text-black" style="border-radius: 25px;">
+                            <div class="card-body p-md-5">
+                                <div class="row justify-content-center">
+                                    <div th:class="#{estilo.pantalladatosderecha}">
+                                        <form class="mx-1 mx-md-4"  role="form" th:action="@{/usuarios/registro}" th:object="${datosUsuario} " method="post">
+                                            <div class="d-flex flex-row align-items-center mb-4">
+                                                <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                                                <div class="form-outline flex-fill mb-0">
+                                                    <input type="text" id="form3Example1c" class="form-control"  maxlength="30" th:field="${datosUsuario.nombreUsuario}"/>
+                                                    <label class="form-label" for="form3Example1c" th:text="#{registro.username}">Nombre usuario</label>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-row align-items-center mb-4">
+                                                <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
+                                                <div class="form-outline flex-fill mb-0">
+                                                    <input type="email" id="form3Example3c" class="form-control"  maxlength="50" th:field="${datosUsuario.email}"/>
+                                                    <label class="form-label" for="form3Example3c">Email</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex flex-row align-items-center mb-4">
+                                                <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
+                                                <div class="form-outline flex-fill mb-0">
+                                                    <input type="password" id="form3Example4c" class="form-control" maxlength="30" th:field="${datosUsuario.password}" />
+                                                    <label class="form-label" for="form3Example4c" th:text="#{registro.password}"></label>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-row align-items-center mb-4" th:switch="#{principal.lang}">
+                                                <div class="form-outline flex-fill mb-0" th:case="'en'">
+                                                    <label for="roles"  class="form-label mt-2 mb-1" th:text="Roles"></label>
+                                                    <select th:field="*{roles}" class="form-control"  id="roles" >
+                                                        <option value="" th:disabled="disabled" th:selected="selected"  th:text="#{grupos.selectonitem}">
+
+                                                        </option>
+                                                        <th:block th:each="roleitem: ${listaRoles}" >
+                                                            <option th:value="${roleitem.id}" th:text="${roleitem.roleName_en}"></option>
+                                                        </th:block>
+
+                                                    </select>
+                                                </div>
+                                                <div class="form-outline flex-fill mb-0" th:case="'es'">
+                                                    <label for="roles"  class="form-label mt-2 mb-1" th:text="Roles"></label>
+                                                    <select th:field="*{roles}" class="form-control"  id="roles" >
+                                                        <option value="" th:disabled="disabled" th:selected="selected"  th:text="#{grupos.selectonitem}">
+
+                                                        </option>
+                                                        <th:block th:each="roleitem: ${listaRoles}" >
+                                                            <option th:value="${roleitem.id}" th:text="${roleitem.roleName_es}"></option>
+                                                        </th:block>
+
+                                                    </select>
+                                                </div>
+                                                <div class="form-outline flex-fill mb-0" th:case="'fr'">
+                                                    <label for="roles"  class="form-label mt-2 mb-1" th:text="Roles"></label>
+                                                    <select th:field="*{roles}" class="form-control"  id="roles" >
+                                                        <option value="" th:disabled="disabled" th:selected="selected"  th:text="#{grupos.selectonitem}">
+
+                                                        </option>
+                                                        <th:block th:each="roleitem: ${listaRoles}" >
+                                                            <option th:value="${roleitem.id}" th:text="${roleitem.roleName_fr}"></option>
+                                                        </th:block>
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-row align-items-center mb-4" th:switch="#{principal.lang}">
+                                                <div class="form-outline flex-fill mb-0" th:case="'en'">
+                                                    <label for="grupos"  class="form-label mt-2 mb-1" th:text="#{general.grupo}"></label>
+                                                    <select th:field="*{grupoTrabajo}" class="form-control"  id="grupos" >
+                                                        <option value="" th:disabled="disabled" th:selected="selected"  th:text="#{grupos.selectonitem}">
+
+                                                        </option>
+                                                        <th:block th:each="grupo: ${listagrupos}" >
+                                                            <option th:value="${grupo.id}" th:text="${grupo.description_en}"></option>
+                                                        </th:block>
+
+                                                    </select>
+                                                </div>
+                                                <div class="form-outline flex-fill mb-0" th:case="'es'">
+                                                    <label for="gruposes"  class="form-label mt-2 mb-1" th:text="#{general.grupo}"></label>
+                                                    <select th:field="*{grupoTrabajo}" class="form-control"  id="gruposes"  >
+                                                        <option value="" th:disabled="disabled" th:selected="selected"  th:text="#{grupos.selectonitem}">
+
+                                                        </option>
+                                                        <th:block th:each="grupo: ${listagrupos}" >
+                                                            <option th:value="${grupo.id}" th:text="${grupo.description_es}"></option>
+                                                        </th:block>
+
+                                                    </select>
+                                                </div>
+                                                <div class="form-outline flex-fill mb-0" th:case="'fr'">
+                                                    <label for="gruposfr"  class="form-label mt-2 mb-1" th:text="#{general.grupo}"></label>
+                                                    <select th:field="*{grupoTrabajo}" class="form-control"  id="gruposfr"  >
+                                                        <option value="" th:disabled="disabled" th:selected="selected"  th:text="#{grupos.selectonitem}">
+
+                                                        </option>
+                                                        <th:block th:each="grupo: ${listagrupos}" >
+                                                            <option th:value="${grupo.id}" th:text="${grupo.description_fr}"></option>
+                                                        </th:block>
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <!--div class="form-check d-flex justify-content-center mb-5">
+                                                <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3c" />
+                                                <label class="form-check-label" for="form2Example3c">
+                                                    <p  th:text="#{registro.termsofservice}"></p>
+                                                     <a href="#!" th:text="#{registro.ts}"></a>
+                                                </label>
+                                            </div-->
+
+                                            <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                                                <button type="submit"  class="btn btn-primary btn-lg" th:text="#{registro.registeruser}">Registrar usuario</button>
+                                            </div>
+                                            <div class="form-check d-flex justify-content-center mb-5">
+                                                <label class="form-check-label" >
+                                                    In case you need to create a group , please contact administrator
+                                                </label>
+
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                    <div th:class="#{estilo.pantalladatosizquierda}">
+                                        <img  th:src="@{/img/logogrande.png}"
+                                             class="img-fluid" alt="Sample image">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    </div>
+
+
+</body>
+</html>

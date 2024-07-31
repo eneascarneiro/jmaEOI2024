@@ -1,0 +1,63 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sd="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{/layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{api.downloadtiff.title}"></title>
+</head>
+<body>
+    <div layout:fragment="cabecera">
+        <h5 class="text-center h6 fw-bold mb-5 mx-1 mx-md-4 mt-4" th:text="#{api.downloadtiff.rules}"></h5>
+    </div>
+    <div layout:fragment="contenido">
+
+        <div class="container h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-lg-12 col-xl-11">
+                    <div class="card text-black" style="border-radius: 25px;">
+                        <div class="card-body p-md-5">
+                            <div class="row justify-content-center">
+
+
+                                <form class="mx-1 mx-md-4"  role="form" th:action="@{/api/listfiles}" th:object="${datos} " method="post">
+                                    <label class="form-label" th:text="${datos.file}"></label>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="d-flex flex-row align-items-center mb-4">
+                                                <div class="form-check">
+                                                    <input type="radio" class="form-check-input" id="radio1" name="optradio" value="NDVI" checked>normalized difference vegetation index
+                                                    <label class="form-check-label" for="radio1"></label>
+                                                    <input type="radio" class="form-check-input" id="radio2" name="optradio" value="NDVI uncertainty">visualization of uncertainty of NDVI due to uncertainty in band values
+                                                    <label class="form-check-label" for="radio2"></label>
+                                                    <input type="radio" class="form-check-input" id="radio3" name="optradio" value="NDVI time series">NDVI time series as a multi-band TIFF with a JSON containg a list of timestamps
+                                                    <label class="form-check-label" for="radio3"></label>
+                                                    <input type="radio" class="form-check-input" id="radio4" name="optradio" value="NDVI difference">NDVI difference between two acquisitions
+                                                    <label class="form-check-label" for="radio4"></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="d-flex flex-row align-items-center mb-8">
+                                                <div class="form-outline w-100 mb-8">
+                                                    <textarea class="form-control" id="scripttextArea" rows="6" th:text="${datos.evalScripts}"></textarea>
+                                                    <input type="text" len id="script" th:hidden="true" class="form-control"  maxlength="3000" th:field="${datos.evalScripts}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                                            <button type="submit"  class="btn btn-primary btn-lg" th:text="#{general.descargar}"></button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

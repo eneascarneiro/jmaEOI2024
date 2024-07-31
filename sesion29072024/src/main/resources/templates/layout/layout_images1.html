@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html th:lang="#{principal.lang}" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <meta th:charset="#{principal.charset}">
+    <title th:text="#{principal.title}"></title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link th:href="@{/img/favicon.ico}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&family=Roboto:wght@500;700;900&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link th:href="@{/lib/animate/animate.min.css}" rel="stylesheet">
+    <link th:href="@{/lib/owlcarousel/assets/owl.carousel.min.css}" rel="stylesheet">
+    <link th:href="@{/lib/lightbox/css/lightbox.min.css}" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body>
+<!-- Spinner Start -->
+<div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+<!-- Spinner End -->
+
+
+<!-- Topbar Start -->
+<div class="container-fluid bg-dark px-5">
+    <div class="row gx-4 d-none d-lg-flex">
+        <div class="col-lg-6 text-start">
+            <div class="h-100 d-inline-flex align-items-center py-3 me-4">
+                <div class="btn-sm-square rounded-circle bg-primary me-2">
+                    <small class="fa fa-map-marker-alt text-white"></small>
+                </div>
+                <small th:text="#{FooterStart.direccion}"></small>
+            </div>
+            <div class="h-100 d-inline-flex align-items-center py-3">
+                <div class="btn-sm-square rounded-circle bg-primary me-2">
+                    <small class="fa fa-envelope-open text-white"></small>
+                </div>
+                <small th:text="#{FooterStart.email}"></small>
+            </div>
+            <div class="h-100 d-inline-flex align-items-center py-3">
+                <div class="btn-sm-square rounded-circle bg-primary me-2">
+                    <small class="fa fa fa-language text-white"></small>
+                </div>
+                <span th:text="#{lang.change}"></span>:
+                <select id="locales">
+                    <option value=""></option>
+                    <option value="es" th:text="#{lang.es}"></option>
+                    <option value="en" th:text="#{lang.eng}"></option>
+                    <option value="fr" th:text="#{lang.fr}"></option>
+                </select>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<!-- Topbar End -->
+
+
+<!-- Navbar Start -->
+<nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0 px-4 px-lg-5">
+    <a href="../index.html" class="navbar-brand d-flex align-items-center">
+        <h2 class="m-0 text-primary" th:text="#{principal.nombreapp}"></h2>
+    </a>
+    <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav ms-auto py-4 py-lg-0"  >
+            <li class="nav-item"
+                th:if="${menuItem.parent.id == 999999 } and  ${menuItem.order < 9999}
+                and  ${#lists.size(menuList.?[parent.id ==  __${menuItem.id}__ ]) == 0 } "
+                th:each="menuItem : ${menuList}" >
+                <th:block th:switch="#{principal.lang}">
+                    <a th:case="'en'"
+                       th:href="${menuItem.url}"
+                       th:text="${menuItem.description_en}"
+                       class="nav-link ">
+                    </a>
+                    <a th:case="'es'"
+                       th:href="${menuItem.url}"
+                       th:text="${menuItem.description_es}"
+                       class="nav-link ">
+                    </a>
+                    <a th:case="'fr'"
+                       th:href="${menuItem.url}"
+                       th:text="${menuItem.description_fr}"
+                       class="nav-link ">
+                    </a>
+                </th:block>
+            </li>
+            <li th:if="${menuItem.parent.id == 999999 } and  ${#lists.size(menuList.?[parent.id ==  __${menuItem.id}__ ]) > 0 } "
+                class="nav-item dropdown"
+                th:each="menuItem : ${menuList}" >
+                <a th:href="${menuItem.url}" th:text="${menuItem.description}"
+                   class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                </a>
+                <div class="dropdown-menu">
+                    <a
+                            th:each="menuItemHijo : ${menuList.?[parent.id ==  __${menuItem.id}__ ]}"
+                            th:href="${menuItemHijo.url}"
+                            th:text="${menuItemHijo.description_en}"
+                            class="dropdown-item">
+                    </a>
+                    <!--th:block th:switch="#{principal.lang}">
+                        <a th:case="'en'"
+                           th:each="menuItemHijo : ${menuList.?[parent.id ==  __${menuItem.id}__ ]}"
+                           th:href="${menuItemHijo.url}"
+                           th:text="${menuItemHijo.description_en}"
+                           class="dropdown-item">
+                        </a>
+                        <a th:case="'es'"
+                           th:each="menuItemHijo : ${menuList.?[parent.id ==  __${menuItem.id}__ ]}"
+                           th:href="${menuItemHijo.url}"
+                           th:text="${menuItemHijo.description_es}"
+                           class="dropdown-item">
+                        </a>
+                        <a th:case="'fr'"
+                           th:each="menuItemHijo : ${menuList.?[parent.id ==  __${menuItem.id}__ ]}"
+                           th:href="${menuItemHijo.url}"
+                           th:text="${menuItemHijo.description_fr}"
+                           class="dropdown-item">
+                        </a>
+                    </th:block-->
+                </div>
+
+            </li>
+            <li class="nav-item"
+                th:if="${menuItem.parent.id == 999999 } and  ${menuItem.order == 9999}
+                    and  ${#lists.size(menuList.?[parent.id ==  __${menuItem.id}__ ]) == 0} "
+                th:each="menuItem : ${menuList}" >
+                <th:block th:switch="#{principal.lang}">
+                    <a th:case="'en'"
+                       th:href="${menuItem.url}"
+                       th:text="${menuItem.description_en}"
+                       class="nav-link ">
+                    </a>
+                    <a th:case="'es'"
+                       th:href="${menuItem.url}"
+                       th:text="${menuItem.description_es}"
+                       class="nav-link ">
+                    </a>
+                    <a th:case="'fr'"
+                       th:href="${menuItem.url}"
+                       th:text="${menuItem.description_fr}"
+                       class="nav-link ">
+                    </a>
+                </th:block>
+            </li>
+        </div>
+    </div>
+</nav>
+<!-- Navbar End -->
+
+
+<!-- Inicio ventanas que rellena java-->
+<div class="container-xxl py-5">
+    <!-- Aqui vamos a escribir las cabeceras de los bloques  -->
+    <section class="container" layout:fragment="cabecera">
+
+    </section>
+    <!-- Aqui vamos a escribir el contenido de los bloques  -->
+    <section class="container" layout:fragment="contenido">
+
+    </section>
+    <section class="container" >
+        <div class="row" id="canvasrow">
+            <div>
+                <div>
+                    <a id ="downloadimg"  href="' + filename + '">
+                        "Download tiff file"
+                        (width: ' + width + ', height:' + height + ')
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div id="wrapper">
+            <canvas id="canvastiff" width="578" height="200">
+            </canvas>
+        </div>
+    </section>
+</div>
+
+<!-- Footer Start -->
+<div class="container-fluid bg-dark text-secondary footer mt-5 py-5 wow fadeIn" data-wow-delay="0.1s">
+    <div class="container py-5">
+        <div class="row g-5">
+            <div class="col-lg-3 col-md-6">
+                <h5 class="text-light mb-4" th:text="#{layout.Address}"></h5>
+                <p class="mb-2" th:text="#{FooterStart.direccion}"><i class="fa fa-map-marker-alt me-3"></i></p>
+                <p class="mb-2" th:text="#{FooterStart.telefono}"><i class="fa fa-phone-alt me-3"></i></p>
+                <p class="mb-2" th:text="#{FooterStart.email}"><i class="fa fa-envelope me-3"></i></p>
+                <!--div class="d-flex pt-2">
+                    <a class="btn btn-square btn-outline-secondary rounded-circle me-2" href=""><i class="fab fa-twitter"></i></a>
+                    <a class="btn btn-square btn-outline-secondary rounded-circle me-2" href=""><i class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-square btn-outline-secondary rounded-circle me-2" href=""><i class="fab fa-youtube"></i></a>
+                    <a class="btn btn-square btn-outline-secondary rounded-circle me-2" href=""><i class="fab fa-linkedin-in"></i></a>
+                </div-->
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h5 class="text-light mb-4" th:text="#{layout.qlinks}" ></h5>
+                <h6 class="text-light mb-4" th:text="#{layout.contact}" ></h6>
+                <div class="dropdown-content">
+                    <a rel="noopener" target="_blank" href="https://investigacion.ubu.es/investigadores/157494/detalle">José Manuel Aroca Fernández</a>
+                    <br>
+                    <a rel="noopener" target="_blank" href="https://investigacion.ubu.es/investigadores/37075/detalle">Pedro Latorre Carmona</a>
+                    <br>
+                    <a rel="noopener" target="_blank" href="https://investigacion.ubu.es/investigadores/35117/detalle">José Francisco Díez Pastor</a>
+
+                </div>
+                <a class="btn btn-link" th:href="'/privacy'" th:text="#{layout.privacy}" ></a>
+                <a class="btn btn-link" th:href="'/termsandconditions'" th:text="#{layout.termcond}" ></a>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h5 class="text-light mb-4" th:text="#{layout.Newsletter}"></h5>
+                <p>Advanced Data MIning Research And (Business intelligence | Bioinformatics | Big Data) LEarning</p>
+                <a class="btn btn-link" href="https://www.linkedin.com/company/admirable-research-group/" th:text="#{layout.admirable}" ></a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer End -->
+
+
+<!-- Copyright Start -->
+<div class="container-fluid py-4" style="background: #000000;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                &copy; <a class="border-bottom" href="#">WALGREEN</a>, All Right Reserved.
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Copyright End -->
+
+
+<!-- Back to Top -->
+<a href="#" class="btn btn-lg btn-primary btn-lg-square rounded-circle back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
+</script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#locales").change(function () {
+            var selectedOption = $('#locales').val();
+            var ref = window.location.pathname;
+            if (selectedOption != ''){
+                window.location.replace(ref + '?lang=' + selectedOption);
+            }
+        });
+    });
+</script>
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/lib/wow/wow.min.js}"></script>
+<script th:src="@{/lib/easing/easing.min.js}"></script>
+<script th:src="@{/lib/waypoints/waypoints.min.js}"></script>
+<script th:src="@{/lib/counterup/counterup.min.js}"></script>
+<script th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
+<script th:src="@{/lib/isotope/isotope.pkgd.min.js}"></script>
+<script th:src="@{/lib/lightbox/js/lightbox.min.js}"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.js"></script>
+<!-- Template Javascript -->
+<script th:src="@{/js/main.js}"></script>
+<script th:src="@{/js/util.js}"></script>
+<script th:src="@{/js/tiff.min.js}"></script>
+<script type="text/javascript">
+    //Follow link https://stackoverflow.com/questions/3420975/html5-canvas-zooming
+    // to improve zoom
+
+    console.log("canvas")
+    var camvasini = document.getElementById("canvastiff");
+    var ox=0,oy=0,px=0,py=0,scx=1,scy=1;
+    camvasini.onmousedown=(e)=>{
+        console.log("onmousedown");
+        px=e.x;
+        py=e.y;
+        camvasini.onmousemove=(e)=>{ox-=(e.x-px);
+            console.log("onmousemove");
+            oy-=(e.y-py);
+            px=e.x;
+            py=e.y;
+        }
+    }
+
+    camvasini.onmouseup=()=>{
+        console.log("onmouseup");
+        camvasini.onmousemove=null;
+    }
+    camvasini.onwheel =(e)=>{
+        console.log("onwheel");
+        let bfzx,bfzy,afzx,afzy;
+        [bfzx,bfzy]=StoW(e.x,e.y);scx-=10*scx/e.deltaY;scy-=10*scy/e.deltaY;
+        [afzx,afzy]=StoW(e.x,e.y);
+        ox+=(bfzx-afzx);
+        oy+=(bfzy-afzy);
+    }
+    var context = camvasini.getContext('2d');
+    draw()
+    function WtoS(wx,wy){
+        let sx=(wx-ox)*scx;
+        let sy=(wy-oy)*scy;
+        return[sx,sy];
+    }
+    function StoW(sx,sy){
+        let wx=sx/scx+ox;
+        let wy=sy/scy+oy;
+        return[wx,wy];
+    }
+
+    function draw() {
+        console.log("draw " )
+
+        var pathimage = $("#file").val();
+        var filename =  '/' + pathimage;
+        var width = 100
+        var height = 100
+        console.log(pathimage)
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', filename);
+        console.log(" open ")
+        xhr.responseType = 'arraybuffer';
+        xhr.onload = function (e) {
+            //initialize with 100MB for large files
+            Tiff.initialize({
+                TOTAL_MEMORY: 100000000
+            });
+            console.log(" open 1 ")
+            var buffer = xhr.response;
+            console.log(" open 2")
+            var tiff = new Tiff({buffer: buffer});
+            console.log(" open 3")
+            var canvastiff = tiff.toCanvas();
+            console.log(" open 4")
+            width = tiff.width();
+            height = tiff.height();
+
+            if (canvastiff) {
+                canvastiff.setAttribute("id","canvastiff");
+                camvasini.replaceWith(canvastiff)
+
+            }
+        };
+        xhr.send();
+    }
+    function clearcanvas(){
+        console.log("draw " )
+
+        var pathimage = $("#file").val();
+        var filename =  '/' + pathimage;
+        var width = 100
+        var height = 100
+        console.log(pathimage)
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', filename);
+        xhr.responseType = 'arraybuffer';
+        xhr.onload = function (e) {
+            var buffer = xhr.response;
+            var tiff = new Tiff({buffer: buffer});
+            var canvastiff = tiff.toCanvas();
+            width = tiff.width();
+            height = tiff.height();
+            if (canvastiff) {
+                canvastiff.setAttribute("id","canvastiff");
+                camvasini.replaceWith(canvastiff)
+
+            }
+        };
+        xhr.send();
+        camvasini = document.getElementById("canvastiff");
+    }
+    function add_polygon() {
+        //poly [x,y, x,y, x,y.....];
+        var minlong = $("#minlong").val();
+        var maxlong = $("#maxlong").val();
+        console.log("minlong :" + minlong + ", maxlong:"  + maxlong  )
+        var minlat = $("#minlat").val();
+        var maxlat = $("#maxlat").val();
+        console.log("minlat :" + minlat + ", maxlat:"  + maxlat  )
+        var coords = document.getElementById("coordinates").value
+        var polygon = String(coords);
+        var arrpilygon = polygon.split(',')
+        console.log(arrpilygon)
+
+        var canvas=document.getElementById("canvastiff")
+        var ctx = canvas.getContext('2d');
+        var width = document.getElementById("canvastiff").width;
+        var height = document.getElementById("canvastiff").height;
+        var minx = canvas.minLon_
+        console.log('width '  + width)
+        console.log('height '  + height)
+        ctx.beginPath();
+        var test = 4/10
+        console.log("test 4/10 :" + test)
+        //Cálculos para posiciones
+        var intlong = (maxlong-minlong)/width;
+        var intlat = (maxlat-minlat)/height;
+        console.log("intlong :" + intlong )
+        console.log("intlat :" + intlat )
+        //Leemos la primera coordenada
+        let firstcoord = String(arrpilygon[0])
+        console.log("firstcoord:" + firstcoord)
+        //Hacemos split con un espacio
+        let arr = firstcoord.split(' ');
+        //Elemento primero longitud
+        var firstlong =arr[0];
+        //Elemento segundo latitud
+        var firstlat = arr[1];
+        console.log("firstlong :" + firstlong + ", firstlat:"  + firstlat  )
+        var firstposx = (firstlong- minlong )/intlong
+        var firstposy = (firstlat- minlat )/intlat
+        console.log("X ini :" + firstposx + ", Y ini :"  + firstposy  )
+
+        ctx.moveTo(firstposx, firstposy);
+
+        for(let item=1 ; item < polygon.length-1 ; item+=1 ){
+            let coord = String(arrpilygon[item])
+            //Hacemos split con un espacio
+            let arrpos = coord.split(' ');
+            //Elemento primero longitud
+            var long =arrpos[0];
+            //Elemento segundo latitud
+            var lat = arrpos[1];
+            var posx = (long- minlong )/intlong
+            var posy = (lat- minlat )/intlat
+            console.log("X  :" + posx + ", Y  :"  + posy  )
+            ctx.lineTo( posx , posy )
+        }
+
+        ctx.closePath();
+        ctx.strokeStyle = document.getElementById("favcolor").value;
+        ctx.stroke()
+    }
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sd="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{/layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{filtrolistararchivos.title}"></title>
+</head>
+<body>
+    <div layout:fragment="cabecera">
+        <h1 th:text="#{filtrolistararchivos.list.title}"></h1>
+    </div>
+    <div layout:fragment="contenido">
+        <div class="box-body">
+            Show <span sd:page-size-selector="javascript"></span> entries
+
+            <form action="#" th:action="@{/}" >
+                <div class="table-responsive">
+                    <!-- Opcion 1 : tabla con contenido ( recomandable en caso de listas-->
+                    <table class="table table-bordered table-hover">
+                        <tr>
+                            <th th:text="#{filtrolistararchivos.field.reference}"></th>
+                            <th th:text="#{filtrolistararchivos.field.dateIni}"></th>
+                            <th th:text="#{filtrolistararchivos.field.dateFin}"></th>
+                            <th th:text="#{filtrolistararchivos.field.cloudCover}"></th>
+                            <th>&nbsp</th>
+                            <th>&nbsp</th>
+                            <th>&nbsp</th>
+                            <th>&nbsp</th>
+                        </tr>
+                        <tr th:each="elemento , posicion : ${lista}">
+                            <td th:text="${elemento.reference}"></td>
+                            <td th:text="${elemento.dateIni}"></td>
+                            <td th:text="${elemento.dateFin}"></td>
+                            <td th:text="${elemento.cloudCover}"></td>
+
+                            <td>
+                                <!-- meter un link para ver  con texto "ver"-->
+                                <a th:href="@{'/filtrolistararchivos/'+ ${elemento.id}}"
+                                   th:text="#{general.detalles}"></a>
+                            </td>
+                            <td>
+                                <button type="submit" th:value="#{btn.showsavedresults}"
+                                        th:text="#{btn.showsavedresults}"
+                                        th:formaction="'/sentinelqueryfiles/filter/'+ ${elemento.id} "
+                                        th:method="get"></button>
+                            </td>
+                            <td>
+                                <button type="submit" th:value="#{btn.relanzar}"
+                                        th:text="#{btn.relanzar}"
+                                        th:formaction="'/filtrolistararchivos/'+ ${elemento.id} +'/relanzar'"
+                                        th:method="get"></button>
+                            </td>
+                            <td>
+                                <!-- meter un boton para borrar  con un boton-->
+                                <button type="submit" value="Eliminar"
+                                        th:text="#{general.eliminar}"
+                                        th:formaction="'/filtrolistararchivos/'+ ${elemento.id} +'/delete'"
+                                        th:method="post"></button>
+                            </td>
+                        </tr>
+                        <!--Mostramos una ultima fila con inormación cuando no hay registros -->
+                        <tr th:if="${lista ==null or  lista.empty}">
+                            <td colspan="13" class="text-center" th:text="#{general.nodata}"></td>
+                        </tr>
+                    </table>
+                </div>
+            </form>
+        </div>
+        <!-- preparamos el div para poner los numeros de pagina-->
+        <div  th:if="${lista!=null and !lista.empty}" >
+            <div class="text-center">
+                <nav>
+                    <ul class="pagination" sd:pagination="full">
+                        <!--  si hay menos del numero minimo de registos no muestro la barra-->
+                        <div  th:if="${lista.totalPages > 0}" class="pagination"
+                              th:each="pageNumber : ${pageNumbers}">
+                            <li th:class="${pageNumber==lista.number + 1} ? active">
+                                <a href="#" th:href="@{/filtrolistararchivos(size=${lista.size}, page=${pageNumber})}"
+                                   th:text=${pageNumber}></a>
+                            </li>
+                        </div>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>
+
