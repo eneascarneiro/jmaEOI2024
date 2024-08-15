@@ -1,0 +1,160 @@
+<html>
+	<head>
+	    <title>Chat WebSocket</title>
+	    
+	    <script src="resources/js/sockjs-0.3.4.js"></script>
+	    <script src="resources/js/stomp.js"></script>
+	    
+	    <script type="text/javascript">
+
+	        var stompClient = null;
+			var notificationCount = 0;
+
+	        function setConnected(connected) {
+
+	            document.getElementById('connect').disabled = connected;
+	            document.getElementById('disconnect').disabled = !connected;
+	            document.getElementById('conversationDiv').style.visibility = connected ? 'visible' : 'hidden';
+	            document.getElementById('response').innerHTML = '';
+	        }
+
+	        function connect() {
+
+	            var socket = new SockJS('/chat');
+	            stompClient = Stomp.over(socket);
+
+	            stompClient.connect({}, function(frame) {
+
+	            	setConnected(true);
+	                console.log('Connected: ' + frame);
+	                stompClient.subscribe('/topic/messages', function(messageOutput) {
+
+	                    showMessageOutput(JSON.parse(messageOutput.body));
+	                });
+					stompClient.subscribe('/user/topic/private-messages', function (messageOutput) {
+						showMessageOutput1(JSON.parse(messageOutput.body));
+					});
+
+					stompClient.subscribe('/topic/global-notifications', function (messageOutput) {
+						notificationCount = notificationCount + 1;
+
+					});
+
+					stompClient.subscribe('/user/topic/private-notifications', function (message) {
+						notificationCount = notificationCount + 1;
+					});
+					saveuserinfo();
+	            });
+
+	        }
+
+			function saveuserinfo() {
+				var from = document.getElementById('from').value;
+				var url = 'http://localhost:8080/registerwebsocket/' + from
+				// Make a GET request
+				fetch(url)
+						.then(response => {
+							if (!response.ok) {
+								throw new Error('Network response was not ok');
+							}
+							return response.json();
+						})
+						.then(data => {
+							console.log(data);
+						})
+						.catch(error => {
+							console.error('Error:', error);
+						});
+			}
+
+	        function disconnect() {
+
+	            if(stompClient != null) {
+	                stompClient.disconnect();
+	            }
+
+	            setConnected(false);
+	            console.log("Disconnected");
+	        }
+
+	        function sendMessage() {
+
+	        	var from = document.getElementById('from').value;
+	            var text = document.getElementById('text').value;
+	            stompClient.send("/app/chat", {}, JSON.stringify({'from':from, 'text':text}));
+	        }
+			function sendMessageTo() {
+
+				var from = document.getElementById('from').value;
+				var text = document.getElementById('text1').value;
+				var to = document.getElementById('to').value;
+				console.log("sending private message");
+				stompClient.send("/app/private-message", {}, JSON.stringify({'from':from, 'to':to,'text':text}));
+			}
+
+	        function showMessageOutput(messageOutput) {
+	            var response = document.getElementById('response');
+	            var p = document.createElement('p');
+	            p.style.wordWrap = 'break-word';
+	            p.appendChild(document.createTextNode( messageOutput.from + ": " + messageOutput.text + " (" + messageOutput.time + ")"));
+	            response.appendChild(p);
+	        }
+
+			function showMessageOutput1(messageOutput) {
+				console.log(messageOutput)
+				var response = document.getElementById('response1');
+				var p = document.createElement('p');
+				p.style.wordWrap = 'break-word';
+				p.appendChild(document.createTextNode( messageOutput.text + " (" + messageOutput.time + ")"));
+				response.appendChild(p);
+			}
+	    </script>
+	    
+	</head>
+	
+	<body onload="disconnect()">
+		<div>
+			<h1>Registro usuario</h1>
+			<div>
+				<input type="text" id="from" placeholder="Choose a nickname"/>
+			</div>
+			<br />
+			<div>
+				<button id="connect" onclick="connect();">Connect</button>
+				<button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>
+			</div>
+		</div>
+		<div>
+			<h1>Envío simple de mensajes</h1>
+		    <br />
+		    <div id="conversationDiv">
+		        <input type="text" id="text" placeholder="Write a message..."/>
+		        <button id="sendMessage" onclick="sendMessage();">Send</button>
+		        <p id="response"></p>
+		    </div>
+		</div>
+
+		<div>
+			<h1>Envío de mensajes a usuarios</h1>
+			<div>
+				<input type="text" id="to" placeholder="Choose a nickname"/>
+			</div>
+			<br />
+			<span
+					id="notifications"
+					style="
+                                    color: white;
+                                    background-color: red;
+                                    padding-left: 15px;
+                                    padding-right: 15px;">
+                            </span>
+			<br />
+			<div id="conversationDiv1">
+				<input type="text" id="text1" placeholder="Write a message..."/>
+				<button id="sendMessage1" onclick="sendMessageTo();">Send</button>
+				<p id="response1"></p>
+			</div>
+		</div>
+
+	</body>
+</html>
